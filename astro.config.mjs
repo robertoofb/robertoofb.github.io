@@ -7,10 +7,10 @@ import { defineConfig } from "astro/config";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import icon from "astro-icon";
-
+import { SITE_URL } from "./src/config";
 // https://astro.build/config
 export default defineConfig({
-  site: "https://powersandwich.com.tw",
+  site: SITE_URL,
   trailingSlash: "never",
   prefetch: {
     prefetchAll: true,
