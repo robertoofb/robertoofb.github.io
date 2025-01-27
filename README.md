@@ -9,6 +9,12 @@ This background component is created using React and Canvas. Since animations ar
 
 ![Theme Preview](public/theme-preview.png)
 
+## Install 
+You can quickly create an Astro blog project and use this theme as a template with the following command in just a few seconds.
+```
+pnpm create astro@latest moojing/astro-leo-theme
+```
+
 ## Commands
 
 All commands are run from the root of the project, from a terminal:
