@@ -32,9 +32,6 @@ importers:
       '@fontsource/poppins':
         specifier: ^5.1.0
         version: 5.1.0
-      '@fontsource/press-start-2p':
-        specifier: ^5.1.0
-        version: 5.1.0
       '@iconify-json/logos':
         specifier: ^1.2.3
         version: 1.2.3
@@ -662,9 +659,6 @@ packages:
 
   '@fontsource/poppins@5.1.0':
     resolution: {integrity: sha512-tpLXlnNi2fwQjiipvuj4uNFHCdoLA8izRsKdoexZuEzjx0r/g1aKLf4ta6lFgF7L+/+AFdmaXFlUwwvmDzYH+g==}
-
-  '@fontsource/press-start-2p@5.1.0':
-    resolution: {integrity: sha512-l2HeeeNdaO9NJZnW+fKz/aq3rbCTac71LY0mXVhy55h2x5RueN+AWRf5AtC9puD1m5fInvwipKQLvpXj0p47Tg==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -4055,8 +4049,6 @@ snapshots:
 
   '@fontsource/poppins@5.1.0': {}
 
-  '@fontsource/press-start-2p@5.1.0': {}
-
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -4198,7 +4190,7 @@ snapshots:
   '@johnsoncodehk/vscode-html-languageservice@5.2.0-34a5462':
     dependencies:
       '@vscode/l10n': 0.0.18
-      vscode-languageserver-textdocument: 1.0.11
+      vscode-languageserver-textdocument: 1.0.12
       vscode-languageserver-types: 3.17.5
       vscode-uri: 3.0.8
 
