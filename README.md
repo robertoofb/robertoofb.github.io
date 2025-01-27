@@ -1,8 +1,7 @@
 # Leo - Astro Theme With Tailwindcss & MDX
 
-[English](README.md)
 
-Leo is an Astro theme inspired by another Astro theme [Mia](https://github.com/infinity-ooo/astro-theme-mia).
+Leo is an Astro theme built with Tailwind that gives you a sense of exploration in the universe and is designed to make writing posts easy. Besides the features offered by other blog themes, the Leo theme comes with an i18n setting for multi-language writers.
 
 ![Theme Preview](public/theme-preview.png)
 
@@ -37,11 +36,13 @@ You can have your content in different langugages after setting the `LANGUAGES` 
 ...
 ```
 
-Read the [Astro Docs](https://docs.astro.build/en/recipes/i18n/) for more information.
+One thing to note is that on the homepage, all posts will be listed without distinguishing between languages. However, the "Posts" link in the header will direct to the English version by default. You can modify this behavior according to your needs.
+
+For other issue you're facing about i18n support from Astro, read the [Astro Docs](https://docs.astro.build/en/recipes/i18n/) for more information.
+
 
 ### Using Rough Notation
-
-Leo is also based on the [Rough Notation](https://roughnotation.com/) library. You can use `<Notation />` component in your MDX content, such as:
+Leo is an Astro theme inspired by another Astro theme [Mia](https://github.com/infinity-ooo/astro-theme-mia). So is also based on the [Rough Notation](https://roughnotation.com/) library. You can use `<Notation />` component in your MDX content, such as:
 
 ```mdx
 In JavaScript, the Array object can be seen as a combination of both <Notation type="box" color="blue">list storage</Notation> and <Notation type="box" color="blue">utility methods</Notation>, providing a unified structure for storing and manipulating data.
