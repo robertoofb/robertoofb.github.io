@@ -18,7 +18,7 @@ export const MENUS = [
     target: "_self",
   },
   {
-    title: "Posts",
+    title: "Projects",
     link: "/en/posts",
     target: "_self",
   },
@@ -46,8 +46,8 @@ export const ME_DESCRIPTION =
 export const WORK_EXPERIENCE = [
   {
     company: "Loading...",
-    position: "...",
-    startDate: "2025?",
+    position: "",
+    startDate: "",
     endDate: "",
   }
 
