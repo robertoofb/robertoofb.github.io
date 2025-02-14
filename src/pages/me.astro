@@ -98,11 +98,3 @@ import { Icon } from "astro-icon/components";
   </div>
 </Layout>
 
-<script>
-  const projects = document.querySelectorAll(".project");
-  projects.forEach((project) => {
-    project.addEventListener("click", () => {
-      window.location.href = `/projects/${project.id}`;
-    });
-  });
-</script>
