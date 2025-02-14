@@ -2,7 +2,7 @@
 
 export const SITE_FAVICON = "/favicon.png";
 export const SITE_LOGO = "/leo.png";
-export const SITE_TITLE = "LEO";
+export const SITE_TITLE = "ROBERTO CARLOS FIERRO BALLOTE";
 export const SITE_URL = "https://robertoofb.github.io";
 export const SITE_DESCRIPTION =
   `
