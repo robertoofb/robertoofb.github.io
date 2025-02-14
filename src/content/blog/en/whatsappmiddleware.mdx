@@ -1,194 +1,322 @@
 ---
-title: 'Middleware Whatsapp'
+title: 'Whatsapp Middleware'
 date: '2024-07-21'
 description: "This web application is a WhatsApp middleware developed for a private company, with the aim of acting as an intermediary between the company and its clients. It facilitates seamless communication, ensuring efficient interaction and support."
 tags: [
-	'education',
 	'management',
+	'middleware',
 	]
-cover: '/10.jpg'
+cover: '/11.jpg'
 ---
-<a href="https://github.com/robertoofb/ProyectoFinal-23AM-IRS" target="_blank" class="text-white hover:underline">Repository</a>
+<a href="https://github.com/robertoofb/whatsapp-main" target="_blank" class="text-white hover:underline">Repository</a>
 
-## What is EduKids?
-<Notation type="underline" color="yellow">EduKids is a desktop application developed in C# with WPF, designed to manage academic processes. It allows various users such as administrators, teachers, tutors, and psychologists to analyze and manage students according to their specific needs.</Notation>
+## What is Whatsapp Middleware?
+<Notation type="underline" color="yellow">This web application was developed using Filament PHP, a highly useful tool for developing web management applications. Its purpose is to help a private company manage client interactions by facilitating communication through a WhatsApp API.</Notation>
 
-## My Contribution to EduKids
-In the aerospace industry, <Notation type="bracket" color="yellow" padding="10px" strokeWidth="2">As part of the development team, my main responsibility was to implement the necessary views for the application’s proper functionality. However, since it was one of my first projects, I focused more on establishing the connection with the database and developing the core functions, including the CRUD operations for each entity.</Notation>
+## My Contribution to Whatsapp Middleware
+In the aerospace industry, <Notation type="bracket" color="yellow" padding="10px" strokeWidth="2">As part of the development team in this project, my role was to design and implement the application’s layout. However, I also worked on tasks such as developing the relational model and migrations, as well as creating the necessary resources to ensure Filament functioned properly.</Notation>
 
-## Administrators view
-<img src="/6.jpg" alt="Portada" class="object-cover w-full h-full" />
+## Dashboard
+<img src="/12.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-## Teachers view
-<img src="/7.jpg" alt="Portada" class="object-cover w-full h-full" />
+## Resources view example
+<img src="/13.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-## Tutor view
-<img src="/8.jpg" alt="Portada" class="object-cover w-full h-full" />
+## Create and Edit view
+<img src="/15.jpg" alt="Portada" class="object-cover w-full h-full" />
+<img src="/14.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-## Psychologists view
-<img src="/9.jpg" alt="Portada" class="object-cover w-full h-full" />
+## Chat view
+<img src="/16.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-## Entities example
+## Resource example
 ```js
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+<?php
 
-namespace ProyectoFinal_23AM.Entities
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\ConversationResource\Pages;
+use App\Filament\Resources\ConversationResource\RelationManagers;
+use App\Models\Conversation;
+use App\Models\Company;
+use App\Models\EndUser;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class ConversationResource extends Resource
 {
-    public class Alumno
-    {
-        [Key]
-        public int PkMatricula { get; set; }
-        public string Nombre { get; set; }
-        public string NombreTutor { get; set; }
-        public int Edad { get; set; }
-        public string Curp { get; set; }
+    protected static ?string $model = Conversation::class;
+    protected static ?int $navigationSort = 2;  
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static ?string $navigationGroup = 'Chats Management';
 
-        [ForeignKey ("Grados")]
-        public int? FkGrado { get; set; }
-        public Grados Grados { get; set; }
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Select::make('company_id')
+                    ->label("Company")
+                    ->options(Company::all()->pluck('name','id')->toArray())//esto me crea el combobox para seleccionar las companies por su nombre y no por su id
+                    ->required(),
+                    //->numeric(),
+                Forms\Components\Select::make('end_user_id')
+                    ->label('End User')
+                    ->options(EndUser::all()->pluck('name', 'id')->toArray())//esto me crea el combobox para seleccionar los endUsers por su nombre y no por su id
+                    ->required(),
+                    //->numeric()
+                Forms\Components\Toggle::make('status')
+                    ->required(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('company.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('endUser.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('status')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('goToChat')
+                ->label('Go to Chat')
+                ->url(fn ($record) => route('conversation.chat', ['id' => $record->id]))
+                ->icon('heroicon-o-chat-bubble-left-right')
+                ->openUrlInNewTab(false), // Esto asegura que se abre en la misma pestaña
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListConversations::route('/'),
+            'create' => Pages\CreateConversation::route('/create'),
+            'edit' => Pages\EditConversation::route('/{record}/edit'),
+        ];
     }
 }
 ```
 
-## Connection
+## Controller example
 ```js
-using Microsoft.EntityFrameworkCore;
-using ProyectoFinal_23AM.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+<?php
 
-namespace ProyectoFinal_23AM.Context
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use GuzzleHttp\Client;               
+use GuzzleHttp\Exception\RequestException;
+use Log;
+use App\Models\Message;
+
+class StartConversationController extends Controller
 {
-    public class ApplicationDbContext : DbContext
+    public function sendTemplate(Request $request)
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            //Cadena de conexion
-            options.UseMySQL("server=localhost; database=EduKidsIRS; user=root; password=");
-            //Si hay error con la mmigracion prueba esta
-            //optionsBuilder.UseMySQL("Server=localhost;port=3306;User ID=root; Database=Empleados23BM");
-        }
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Rol> Roles { get; set; }
-        public DbSet<Alumno> alumnos { get; set; }
-        public DbSet<Grados> grados { get; set; }
-        public DbSet<Materias> materias { get; set; }
-        public DbSet<Calificaciones> calificaciones { get; set; }
-        public DbSet<Observaciones> observaciones { get; set; }
+        $clientnumber = $request->input('number'); // Obtener el número de teléfono del request
+        $clientname = $request->input('name'); // Obtener el nombre del cliente del request
+        $conversationId = $request->input('conversation_id'); // Obtener el ID de la conversación del request
 
+        // Crear un nuevo cliente HTTP
+        $client = new Client();
 
-    }
-}  
-```
-## Services example
-```js
-using Microsoft.EntityFrameworkCore;
-using ProyectoFinal_23AM.Context;
-using ProyectoFinal_23AM.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+        $startTime = microtime(true); // Registrar el tiempo de inicio
 
-namespace ProyectoFinal_23AM.Services
-{
-    public class CalificacionesServices
-    {
-        public void AddCalificacion(Calificaciones request)
-        {
-            try
-            {
-                if (request != null)
-                {
-                    using (var _context = new ApplicationDbContext())
-                    {
-                        Calificaciones res = new Calificaciones()
-                        {
-                            FkMatricula = request.FkMatricula,
-                            FkGrado= request.FkGrado,
-                            FkMateria= request.FkMateria,
-                            Calificación = request.Calificación,
-                            Asistencia= request.Asistencia,
-                        };
-                        _context.calificaciones.Add(res);
-                        _context.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrió un error " + ex.Message);
-            }
-        }
-        public void UpdateCalificacion(Calificaciones request)
-        {
-            try
-            {
-                using (var _context = new ApplicationDbContext())
-                {
-                    Calificaciones update = _context.calificaciones.Find(request.PkCalificaciones);
-                    update.FkMatricula = request.FkMatricula;
-                    update.FkGrado = request.FkGrado;
-                    update.FkMateria = request.FkMateria;
-                    update.Calificación = request.Calificación;
-                    update.Asistencia = request.Asistencia;
+        try {
+            // Enviar un mensaje de plantilla
+            $response = $client->post('https://graph.facebook.com/v19.0/345902291933622/messages', [
+                'headers' => [
+                    'Authorization' => 'Bearer EAAVKAU14AAkBO2JZBTBby4D2HMWtmFnodN0M0pP69cJHl5SGQt1PHdF13DZAXUmcdJ9TpnGBbgnM5LBUEpWnThMDPCgQgMCTC7JgJEDMu0UZA1YZCKYwuuOudzwFd6XbZCNfWQU2xu81e4OV8a70eclD5lVDmT1B5WqGuepheRdMzgxxC5Kym33kUAmhG8jKCtxtrRARnUeHWUVyBRKnqVMqxyuT42BfJtUZBoSmUZD', // Reemplazar con tu token de acceso
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'messaging_product' => 'whatsapp',
+                    'to' => $clientnumber, // Utilizar el número del request
+                    'type' => 'template',
+                    'template' => [
+                        'name' => 'start_chat', // Asegúrate de que este es el nombre correcto de tu plantilla
+                        'language' => [
+                            'code' => 'en_US',
+                        ],
+                        'components' => [
+                            [
+                                'type' => 'body',
+                                'parameters' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => $clientname,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
 
-                    _context.calificaciones.Update(update);
-                    _context.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocurrió un error " + ex.Message);
-            }
-        }
-        public List<Calificaciones> GetCalificaciones()
-        {
-            try
-            {
-                using (var _context = new ApplicationDbContext())
-                {
-                    List<Calificaciones> calificaciones = new List<Calificaciones>();
+            //Guardar el template en la BD
+            Message::create([
+                'conversation_id' => $conversationId,
+                'sender_type' => 'company', // Tipo de remitente
+                'sender_id' => 1, // Puedes ajustar este valor según corresponda
+                'message' => "Hello {$clientname}, at Devtzal we offer a solution to improve the visibility of your brand in the digital age and increase the value of your business. If you wish to continue the conversation, please reply to this message.",
+                'media_url' => null,
+                'status' => 'sent',
+            ]);
+            
+            $endTime = microtime(true); // Registrar el tiempo de finalización
+            $executionTime = $endTime - $startTime; // Calcular el tiempo de ejecución
 
-                    calificaciones = _context.calificaciones.Include(x => x.Materias).Include(x => x.Grados).Include(x => x.Alumnos).ToList();
+            Log::info('Tiempo de ejecución para enviar el mensaje de plantilla: ' . $executionTime . ' segundos.');
 
-                    return calificaciones;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Sucedió un error " + ex.Message);
-            }
-        }
-        public List<Materias> GetMaterias()
-        {
-            try
-            {
-                using (var _context = new ApplicationDbContext())
-                {
-                    List<Materias> materias = new List<Materias>();
+            return response()->json([
+                'status' => 'success',
+                'response' => $response->getBody(),
+                'execution_time' => $executionTime
+            ]);
 
-                    materias = _context.materias.ToList();
-
-                    return materias;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Sucedió un error " + ex.Message);
-            }
+        } catch (RequestException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }
+```
+## Chat view code
+```js
+@extends('layouts.app')
+
+@section('content')
+<body>
+    <div class="app">
+        <div class="screen join-screen">
+        </div>
+        <div class="screen chat-screen active">
+            <div class="header">
+                <div class="left-container">
+                    <img src="/images/user.png" class="image">
+                    <div class="logo">{{ $conversation->enduser->name }}</div>
+                </div>
+                <button id="exit-chat"></button>
+            </div>
+            <div class="messages" id="messages">
+                <!-- Aquí puedes mostrar los mensajes existentes -->
+                @foreach($conversation->messages as $message)
+                    <div class="message {{ $message->sender_type == 'company' ? 'my-message' : 'other-message' }}">
+                        <div>
+                            <div class="name">{{ $message->sender_type == 'company' ? $conversation->company->name : $conversation->enduser->name }}</div>
+                            <div class="text">{{ $message->message }}</div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="typebox">
+                <textarea id="message-input"></textarea>
+                <div class="button">
+                    <button class="send-message" id="send-message" disabled></button>
+                    <button class="start-conversation" id="start-conversation">Start Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const sendMessageButton = document.getElementById('send-message');
+        const startConversationButton = document.getElementById('start-conversation');
+        const messageInput = document.getElementById('message-input');
+        const phoneNumber = '{{ $conversation->enduser->phone }}'; // Encerrar en comillas simples para tratarlo como cadena
+        const clientName = "{{ $conversation->enduser->name }}";
+        const conversationId = "{{ $conversation->id }}"; // Asegúrate de que este valor esté disponible
+
+        // Event listener for the exit-chat button
+        document.getElementById('exit-chat').addEventListener('click', function() {
+            window.location.href = "{{ url('/dashboard/conversations') }}";
+        });
+
+        // Event listener for the start-conversation button
+        startConversationButton.addEventListener('click', function() {
+            fetch('/send-template', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ number: phoneNumber, name: clientName, conversation_id: conversationId }), // Enviar el número y el ID de la conversación al servidor
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    sendMessageButton.disabled = false;
+                    startConversationButton.disabled = true;
+                    messageInput.disabled = false;
+                } else {
+                    alert('Error al iniciar la conversación');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Event listener for the send-message button
+        sendMessageButton.addEventListener('click', function() {
+            const message = messageInput.value;
+            fetch('/send-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ message, number: phoneNumber, conversation_id: conversationId }), // Pasar el número también
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Limpiar el textarea después de enviar el mensaje
+                messageInput.value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+@endsection
 ```
