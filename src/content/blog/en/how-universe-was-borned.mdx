@@ -8,26 +8,187 @@ tags: [
 	]
 cover: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=2350&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 ---
+<a href="https://github.com/robertoofb/ProyectoFinal-23AM-IRS" target="_blank" class="text-white hover:underline">Repository</a>
 
-## **How the Universe Was Born?**  
-The origin of the universe is one of the greatest mysteries humanity has sought to unravel. Modern science suggests that the universe was born from an event known as the Big Bang. This cataclysmic explosion marked the beginning of time, space, and matter as we know it. Before this moment, all the energy and matter in the universe were compressed into an infinitely small and dense point called a singularity.
+## What is EduKids?
+<Notation type="underline" color="yellow">EduKids is a desktop application developed in C# with WPF, designed to manage academic processes. It allows various users such as administrators, teachers, tutors, and psychologists to analyze and manage students according to their specific needs.</Notation>
 
----
+## My Contribution to EduKids
+In the aerospace industry, <Notation type="bracket" color="yellow" padding="10px" strokeWidth="2">As part of the development team, my main responsibility was to implement the necessary views for the application’s proper functionality. However, since it was one of my first projects, I focused more on establishing the connection with the database and developing the core functions, including the CRUD operations for each entity.</Notation>
 
-## **When the Universe Was Born?**  
-Scientists estimate that the universe was born approximately **13.8 billion years ago**. This timeline is based on observations of the cosmic microwave background radiation (CMB), which is essentially the afterglow of the Big Bang. Using advanced telescopes and instruments, astronomers have measured the expansion rate of the universe, allowing them to calculate its age with remarkable precision.
+## Administrators view
+<img src="/6.jpg" alt="Portada" class="object-cover w-full h-full" />
 
----
+## Teachers view
+<img src="/7.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-## **What’s the Big Bang Theory?**  
-The Big Bang Theory is the prevailing scientific explanation for the origin of the universe. It posits that the universe began as a singularity that rapidly expanded in a fraction of a second, a process known as "inflation." During this expansion, particles, energy, and light formed, eventually giving rise to stars, galaxies, and planets.
+## Tutor view
+<img src="/8.jpg" alt="Portada" class="object-cover w-full h-full" />
 
-Key evidence supporting the Big Bang Theory includes:  
-1. **Cosmic Microwave Background Radiation (CMB):** The faint radiation left over from the Big Bang, discovered in 1965, provides a snapshot of the early universe.  
-2. **Hubble’s Law:** Observations show that galaxies are moving away from us, indicating that the universe is expanding.  
-3. **Elemental Abundance:** The proportions of hydrogen and helium observed in the universe align with predictions made by the Big Bang Theory.
+## Psychologists view
+<img src="/9.jpg" alt="Portada" class="object-cover w-full h-full" />
 
----
+## Entities example
+```js
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-## **Conclusion**  
-The universe's birth remains a profound topic that inspires scientists and thinkers to explore deeper. While the Big Bang Theory provides a solid framework, questions about what preceded the singularity and the ultimate fate of the universe continue to fuel curiosity. Each discovery brings us closer to understanding the origins of existence, reminding us of the vastness and wonder of the cosmos.
+namespace ProyectoFinal_23AM.Entities
+{
+    public class Alumno
+    {
+        [Key]
+        public int PkMatricula { get; set; }
+        public string Nombre { get; set; }
+        public string NombreTutor { get; set; }
+        public int Edad { get; set; }
+        public string Curp { get; set; }
+
+        [ForeignKey ("Grados")]
+        public int? FkGrado { get; set; }
+        public Grados Grados { get; set; }
+    }
+}
+```
+
+## Connection
+```js
+using Microsoft.EntityFrameworkCore;
+using ProyectoFinal_23AM.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProyectoFinal_23AM.Context
+{
+    public class ApplicationDbContext : DbContext
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            //Cadena de conexion
+            options.UseMySQL("server=localhost; database=EduKidsIRS; user=root; password=");
+            //Si hay error con la mmigracion prueba esta
+            //optionsBuilder.UseMySQL("Server=localhost;port=3306;User ID=root; Database=Empleados23BM");
+        }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Rol> Roles { get; set; }
+        public DbSet<Alumno> alumnos { get; set; }
+        public DbSet<Grados> grados { get; set; }
+        public DbSet<Materias> materias { get; set; }
+        public DbSet<Calificaciones> calificaciones { get; set; }
+        public DbSet<Observaciones> observaciones { get; set; }
+
+
+    }
+}  
+```
+## Services example
+```js
+using Microsoft.EntityFrameworkCore;
+using ProyectoFinal_23AM.Context;
+using ProyectoFinal_23AM.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace ProyectoFinal_23AM.Services
+{
+    public class CalificacionesServices
+    {
+        public void AddCalificacion(Calificaciones request)
+        {
+            try
+            {
+                if (request != null)
+                {
+                    using (var _context = new ApplicationDbContext())
+                    {
+                        Calificaciones res = new Calificaciones()
+                        {
+                            FkMatricula = request.FkMatricula,
+                            FkGrado= request.FkGrado,
+                            FkMateria= request.FkMateria,
+                            Calificación = request.Calificación,
+                            Asistencia= request.Asistencia,
+                        };
+                        _context.calificaciones.Add(res);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error " + ex.Message);
+            }
+        }
+        public void UpdateCalificacion(Calificaciones request)
+        {
+            try
+            {
+                using (var _context = new ApplicationDbContext())
+                {
+                    Calificaciones update = _context.calificaciones.Find(request.PkCalificaciones);
+                    update.FkMatricula = request.FkMatricula;
+                    update.FkGrado = request.FkGrado;
+                    update.FkMateria = request.FkMateria;
+                    update.Calificación = request.Calificación;
+                    update.Asistencia = request.Asistencia;
+
+                    _context.calificaciones.Update(update);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error " + ex.Message);
+            }
+        }
+        public List<Calificaciones> GetCalificaciones()
+        {
+            try
+            {
+                using (var _context = new ApplicationDbContext())
+                {
+                    List<Calificaciones> calificaciones = new List<Calificaciones>();
+
+                    calificaciones = _context.calificaciones.Include(x => x.Materias).Include(x => x.Grados).Include(x => x.Alumnos).ToList();
+
+                    return calificaciones;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error " + ex.Message);
+            }
+        }
+        public List<Materias> GetMaterias()
+        {
+            try
+            {
+                using (var _context = new ApplicationDbContext())
+                {
+                    List<Materias> materias = new List<Materias>();
+
+                    materias = _context.materias.ToList();
+
+                    return materias;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error " + ex.Message);
+            }
+        }
+    }
+}
+```
