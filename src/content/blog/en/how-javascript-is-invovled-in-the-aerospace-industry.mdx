@@ -23,7 +23,7 @@ cover: '/1.jpg'
 ## My Contribution to Scirehub
 In the aerospace industry, <Notation type="bracket" color="yellow" padding="10px" strokeWidth="2">In the development team of this web application, my role was both designer and web developer. I was responsible for structuring and implementing key modules, including the homepage, category pages, and hero sections. Additionally, I ensured the proper integration with Supabase and developed TypeScript-based functions to facilitate the correct rendering and functionality of each page component.</Notation>
 ## Home
-<img src="/1.jpg" alt="Portada" class="object-cover w-full h-64" />
+<img src="/1.jpg" alt="Portada" class="object-cover w-full h-full" />
 ```js
 "use client";
 import { supabase } from "../../lib/supabase";
@@ -82,7 +82,7 @@ export default function Investigaciones() {
 }
 ```
 ## Home Categorie
-cover: '/3.jpg'
+<img src="/3.jpg" alt="Portada" class="object-cover w-full h-full" />
 ```js
 "use client";
 import { supabase } from "../../../lib/supabase";
@@ -161,7 +161,7 @@ export default function InvestigacionesBiotecnologia() {
 }
 ```
 ## Cateogories and Cards
-cover: '/4.jpg'
+<img src="/4.jpg" alt="Portada" class="object-cover w-full h-full" />
 ```js
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -299,7 +299,7 @@ export const Investigacion = ({ data }: InvestigacionProps) => {
 };
 ```
 ## Researchers
-cover: '/5.jpg'
+<img src="/5.jpg" alt="Portada" class="object-cover w-full h-full" />
 ```js
 "use client";
 import { Investigacion, InvestigacionType } from "./investigacion";
