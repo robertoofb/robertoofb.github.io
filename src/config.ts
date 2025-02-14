@@ -33,9 +33,9 @@ export const MENUS = [
 export const FOOTER_CONTENT = "Mr.Roberto. All rights reserved.";
 
 export const CONTACTS = {
-  linkedIn: "YOUR_LINKEDIN_URL",
-  github: "YOUR_GITHUB_URL",
-  email: "mailto:YOUR_EMAIL",
+  linkedIn: "https://www.linkedin.com/in/roberto-carlos-fierro-ballote-762619291/",
+  github: "https://github.com/robertoofb",
+  email: "mailto:robertojunio2004@gmail.com",
 };
 
 export const SLOGAN = "To infinity and beyond!";
@@ -48,7 +48,7 @@ export const WORK_EXPERIENCE = [
     company: "Loading...",
     position: "...",
     startDate: "2025?",
-    endDate: "...",
+    endDate: "",
   }
 
   // ,{
